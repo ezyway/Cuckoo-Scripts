@@ -64,3 +64,5 @@ sudo iptables -t nat -A POSTROUTING -o $nic_interface_name -j MASQUERADE
 echo 1 | sudo tee -a /proc/sys/net/ipv4/ip_forward
 sudo sysctl -w net.ipv4.ip_forward=1
 sudo su -c "iptables-save > /etc/iptables/rules.v4"
+
+echo "\n[*] The script have executed successfully. Now you have to install Windows 7 in virtualbox VM and edit cuckoo configuration files. Please have a look at the installation notes.\n"
