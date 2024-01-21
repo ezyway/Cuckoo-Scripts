@@ -16,10 +16,12 @@ sudo python pip.py
 
 echo "\n[*] Installing Volatility \n"
 git clone https://github.com/volatilityfoundation/volatility.git
-sudo python /volatility/setup.py build
-sudo python /volatility/setup.py install
+cd volatility/
+sudo python setup.py build
+sudo python setup.py install
+cd ..
 
-echo "\n[*] Installing additional python libs \n"
+echo "\n[*] Installing additional python libs (jupyter error will be raised, ignore it) \n"
 sudo -H pip install distorm3==3.4.4
 sudo -H pip install yara-python==3.6.3
 sudo -H pip install pydeep
@@ -45,9 +47,9 @@ echo "\n[*] Creating and Configuring Host Only Network Adapter \n"
 vboxmanage hostonlyif create
 vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1 
 sudo mkdir /opt/systemd/
-printf "!/bin/bash\nhostonlyif create\nvboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1" > /opt/systemd/vboxhostonly
+sudo su -c 'printf "!/bin/bash\nhostonlyif create\nvboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1" > /opt/systemd/vboxhostonly'
 sudo chmod a+x /opt/systemd/vboxhostonly
-printf "Description=Setup VirtualBox Hostonly Adapter\nAfter=vboxdrv.service\n[Service]\nType=oneshot\nExecStart=/opt/systemd/vboxhostonly\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/vboxhostonlynic.service
+sudo su -c 'printf "Description=Setup VirtualBox Hostonly Adapter\nAfter=vboxdrv.service\n[Service]\nType=oneshot\nExecStart=/opt/systemd/vboxhostonly\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/vboxhostonlynic.service'
 sudo systemctl daemon-reload
 sudo systemctl enable vboxhostonlynic.service
 sudo systemctl start vboxhostonlynic.service
